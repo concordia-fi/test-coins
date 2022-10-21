@@ -4,13 +4,8 @@ version = '0.1.1'
 
 [dependencies.AptosFramework]
 git = 'https://github.com/aptos-labs/aptos-core.git'
-rev = 'devnet'
+rev = 'main'
 subdir = 'aptos-move/framework/aptos-framework'
 
 [addresses]
 test_coins = "_"
-test_coins_extended = "_"
-
-test_token_admin = "_"
-test_token_extended_admin = "_"
-test_account = "0x15"

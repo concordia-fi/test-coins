@@ -4,11 +4,15 @@ module test_coins::coins {
 
     use aptos_framework::coin::{Self, MintCapability, BurnCapability};
 
-    /// Represents test USDT coin.
+    struct USDC {}
+
     struct USDT {}
 
-    /// Represents test BTC coin.
     struct BTC {}
+
+    struct ETH {}
+
+    struct DAI {}
 
     /// Storing mint/burn capabilities for `USDT` and `BTC` coins under user account.
     struct Caps<phantom CoinType> has key {
@@ -18,6 +22,15 @@ module test_coins::coins {
 
     /// Initializes `BTC` and `USDT` coins.
     public entry fun register_coins(token_admin: &signer) {
+        let (eth_b, eth_f, eth_m) =
+            coin::initialize<ETH>(token_admin,
+                utf8(b"ETH"), utf8(b"ETH"), 8, true);
+        let (usdc_b, usdc_f, usdc_m) =
+            coin::initialize<USDC>(token_admin,
+                utf8(b"USDC"), utf8(b"USDC"), 6, true);
+        let (dai_b, dai_f, dai_m) =
+            coin::initialize<DAI>(token_admin,
+                utf8(b"DAI"), utf8(b"DAI"), 6, true);
         let (btc_b, btc_f, btc_m) =
             coin::initialize<BTC>(token_admin,
                 utf8(b"Bitcoin"), utf8(b"BTC"), 8, true);
@@ -27,7 +40,13 @@ module test_coins::coins {
 
         coin::destroy_freeze_cap(btc_f);
         coin::destroy_freeze_cap(usdt_f);
+        coin::destroy_freeze_cap(eth_f);
+        coin::destroy_freeze_cap(usdc_f);
+        coin::destroy_freeze_cap(dai_f);
 
+        move_to(token_admin, Caps<ETH> { mint: eth_m, burn: eth_b });
+        move_to(token_admin, Caps<USDC> { mint: usdc_m, burn: usdc_b });
+        move_to(token_admin, Caps<DAI> { mint: dai_m, burn: dai_b });
         move_to(token_admin, Caps<BTC> { mint: btc_m, burn: btc_b });
         move_to(token_admin, Caps<USDT> { mint: usdt_m, burn: usdt_b });
     }
